@@ -88,7 +88,7 @@ export const Register = () => {
         // Kullanıcıyı Login sayfasına yönlendir
         navigation.navigate('Login');
       } catch (error) {
-        console.error('Kayıt hatası:', error);
+        console.error('Kayıt hatası oluştu:', error);
         setError('');
       }
     }
