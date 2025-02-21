@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import firestore from '@react-native-firebase/firestore';
+import auth from '@react-native-firebase/auth';
 
 interface Option {
   text: string;
@@ -94,14 +95,20 @@ export const ScreenIndex = () => {
 
   // firebase bağlantısı
   const saveAnswerToFirestore = async (answers: Answers) => {
+    // Bu fonksiyon, kullanıcının verdiği cevapları Firestore’daki "answers" koleksiyonuna ekler.
     try {
-      const answersCollection = Object.entries(answers).map(([key, value]) => ({
-        question: questions[parseInt(key)].question,
-        answer: value,
-      }));
+      const userEmail = auth().currentUser?.email;
 
-      const docRef = await firestore()
-        .collection('answers')
+      const answersCollection = {
+        email: userEmail || '',
+        answers: Object.entries(answers).map(([key, value]) => ({
+          question: questions[parseInt(key)].question,
+          answer: value,
+        })),
+      };
+
+      const docRef = await firestore() // firestoreye cevaplar eklenir
+        .collection('answers') //answers" koleksiyonuna erişiyoruz
         .add({answers: answersCollection});
       console.log('trigger docRef', docRef.id);
       return true;
@@ -112,6 +119,7 @@ export const ScreenIndex = () => {
   };
 
   const handleAnswer = async (answer: string) => {
+    // cevap kaydedildiktens sonra firestoreye gönderme
     //soruları getirecek yapı
     const newAnswers = {...answers, [currentQuestion]: answer};
     setAnswers(newAnswers);
