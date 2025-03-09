@@ -11,6 +11,8 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
+import { NavigationContainerProps, NavigationProp, useNavigation } from '@react-navigation/native';
+import { RootStackParamList } from '../interfaces/Naw/RootStackParamList';
 
 interface Option {
   text: string;
@@ -88,7 +90,7 @@ export const ScreenIndex = () => {
   //const navigation = useNavigation();
   const [answers, setAnswers] = useState<Answers>({});
   const [currentQuestion, setCurrentQuestion] = useState<number>(0);
-
+  const navigation=useNavigation<NavigationProp<RootStackParamList>>();
   useEffect(() => {
     //firebase entegrasyonu
   }, []);
@@ -131,8 +133,9 @@ export const ScreenIndex = () => {
         const response = await saveAnswerToFirestore(newAnswers);
         console.log('trigger response', response);
         if (response) {
-          Alert.alert('Cevaplarınız kaydedildi');
-        } else {
+          navigation.navigate("Home")  
+        } 
+        else {
           Alert.alert('Cevaplarınız kaydedilirken hata oluştu.');
         }
       } catch (error) {

@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {
+  Alert,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -55,44 +56,70 @@ export const Register = () => {
   };
 
   const handleSubmit = async () => {
-    if (validateForm()) {
-      setError(null);
-
-      try {
-        // Firebase ile kullanıcıyı oluştur
-        const userCredentials = await auth().createUserWithEmailAndPassword(
-          formData.email,
-          formData.password,
-        );
-
-        console.log('Trigger user credentials', userCredentials);
-
-        // Firebase'e kullanıcıyı ekle
-        await createUserInFirestore(
-          userCredentials.user.uid,
-          formData.email,
-          formData.username,
-        );
-
-        // Kullanıcıya doğrulama e-postası gönder
-        await userCredentials.user.sendEmailVerification();
-        console.log('Doğrulama e-postası gönderildi.');
-
-        // Kullanıcıyı çıkış yapmaya zorla
-        await auth().signOut();
-
-        alert(
-          'Kayıt başarılı! Lütfen e-postanızı kontrol edip doğrulama yapın.',
-        );
-
-        // Kullanıcıyı Login sayfasına yönlendir
-        navigation.navigate('Login');
-      } catch (error) {
-        console.error('Kayıt hatası oluştu:', error);
-        setError('');
+    if (!validateForm()) return;
+  
+    setError(null);
+  
+    try {
+      // Firebase ile kullanıcıyı oluştur
+      const userCredentials = await auth().createUserWithEmailAndPassword(
+        formData.email,
+        formData.password
+      );
+  
+      console.log("Kullanıcı oluşturuldu:", userCredentials);
+  
+      // Firestore'a kullanıcıyı ekle
+      await createUserInFirestore(
+        userCredentials.user.uid,
+        formData.email,
+        formData.username
+      );
+  
+      // Kullanıcıya doğrulama e-postası gönder
+      await userCredentials.user.sendEmailVerification();
+      console.log("Doğrulama e-postası gönderildi.");
+  
+      // Kullanıcıyı çıkış yapmaya zorla
+      await auth().signOut();
+  
+      Alert.alert(
+        "Kayıt başarılı!",
+        "Lütfen e-postanızı kontrol edip doğrulama yapın."
+      );
+  
+      // Login sayfasına yönlendir
+      navigation.navigate("Login");
+    } catch (error: unknown) {
+      console.error("Kayıt hatası:", error);
+  
+      let errorMessage = "Bir hata oluştu, lütfen tekrar deneyin.";
+  
+      // error nesnesinin Error olup olmadığını kontrol et
+      if (error instanceof Error) {
+        switch ((error as any).code) {
+          case "auth/email-already-in-use":
+            errorMessage = "Bu e-posta adresi zaten kullanımda.";
+            break;
+          case "auth/invalid-email":
+            errorMessage = "Geçersiz bir e-posta adresi girdiniz.";
+            break;
+          case "auth/weak-password":
+            errorMessage = "Şifre çok zayıf! Lütfen daha güçlü bir şifre seçin.";
+            break;
+          case "auth/network-request-failed":
+            errorMessage = "İnternet bağlantınızı kontrol edin ve tekrar deneyin.";
+            break;
+          default:
+            errorMessage = error.message;
+        }
       }
+  
+      setError(errorMessage);
     }
   };
+  
+  
 
   return (
     <LinearGradient

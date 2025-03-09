@@ -13,6 +13,7 @@ import {
 import {RootStackParamList} from '../../interfaces/Naw/RootStackParamList';
 import LinearGradient from 'react-native-linear-gradient';
 import auth from '@react-native-firebase/auth';
+import { checkUserSurveyExists } from '../../Utils/firebase';
 
 interface LoginProps {
   email: string;
@@ -55,30 +56,61 @@ export const Login = () => {
 
   const handleLogin = async () => {
     try {
-      if (!validateForm()) return;
-
+      if (!validateForm()) return; // Form geçerli değilse çık
+  
       setError(null);
-
+  
       // Kullanıcı giriş yapmayı dener
-      const userCredentials = await auth().signInWithEmailAndPassword(
+      const userCrendetials= await auth().signInWithEmailAndPassword(
         formData.email,
-        formData.password,
+        formData.password
       );
-
+  
+      
+  
+      // Kullanıcının token'ını al
+      const token = await userCrendetials.user?.getIdToken();
+      if (!token) {
+        throw new Error('Kimlik doğrulama başarısız.');
+      }
+      await checkUserSurveyExists(formData.email).then((response) => {
+        if (response) {
+          navigation.navigate('Home');
+        } else {
+          navigation.navigate('InitialQuestions');
+        }
+      })
       // E-posta doğrulanmış mı kontrol et
-      if (!userCredentials.user.emailVerified) {
-        Alert.alert('Hata', 'Lütfen e-postanızı doğrulayın.');
+      if (!userCrendetials.user.emailVerified) {
         await auth().signOut(); // Kullanıcıyı çıkış yaptır
+        Alert.alert('Hata', 'Lütfen e-postanızı doğrulayın.');
         return;
       }
 
+     
+  
       console.log('Giriş başarılı!');
-      navigation.navigate('InitialQuestions'); // Kullanıcıyı ana sayfaya yönlendir
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Giriş hatası:', error);
-      setError('E-posta veya şifre hatalı.');
+  
+      let errorMessage = 'E-posta veya şifre hatalı.';
+  
+      if (error instanceof Error) {
+        const firebaseError = error as { code?: string }; // Firebase hata kodlarını almak için
+  
+        if (firebaseError.code === 'auth/user-not-found') {
+          errorMessage = 'Kullanıcı bulunamadı.';
+        } else if (firebaseError.code === 'auth/wrong-password') {
+          errorMessage = 'Yanlış şifre.';
+        } else if (firebaseError.code === 'auth/too-many-requests') {
+          errorMessage = 'Çok fazla başarısız deneme. Lütfen daha sonra tekrar deneyin.';
+        }
+      }
+  
+      setError(errorMessage);
     }
   };
+  
 
   return (
     <LinearGradient
