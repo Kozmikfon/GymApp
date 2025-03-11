@@ -17,7 +17,7 @@ export const AppNavigator = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="AdminDashboard"
+        initialRouteName="Login"
         screenOptions={{headerShown: false}}>
         <Stack.Screen name="InitialQuestions" component={ScreenIndex} />
         <Stack.Screen name="Login" component={Login} />
