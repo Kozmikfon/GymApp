@@ -3,7 +3,7 @@ import { View, Text, ScrollView, StyleSheet } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 
 const Home = () => {
-  const workoutCategories = ["Strength", "Cardio", "Flexibility", "HIIT", "Yoga", "Pilates", "CrossFit","Weight Loss","Healthy Living"];
+  const workoutCategories = ["Strength", "Cardio", "Flexibility", "HIIT", "Yoga", "Pilates", "CrossFit","Weight Loss"];
 
   return (
     <View style={styles.container}>
