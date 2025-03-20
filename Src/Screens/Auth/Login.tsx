@@ -13,7 +13,7 @@ import {
 import {RootStackParamList} from '../../interfaces/Naw/RootStackParamList';
 import LinearGradient from 'react-native-linear-gradient';
 import auth from '@react-native-firebase/auth';
-import { checkUserSurveyExists } from '../../Utils/firebase';
+import { checkUserSurveyExists, getUserRoles } from '../../Utils/firebase';
 
 interface LoginProps {
   email: string;
@@ -70,16 +70,18 @@ export const Login = () => {
   
       // Kullanıcının token'ını al
       const token = await userCrendetials.user?.getIdToken();
+        
       if (!token) {
         throw new Error('Kimlik doğrulama başarısız.');
       }
       await checkUserSurveyExists(formData.email).then((response) => {
-        if (response) {
+        if (response) { 
           navigation.navigate('Home');
         } else {
           navigation.navigate('InitialQuestions');
         }
-      })
+       
+      });
       // E-posta doğrulanmış mı kontrol et
       if (!userCrendetials.user.emailVerified) {
         await auth().signOut(); // Kullanıcıyı çıkış yaptır

@@ -1,6 +1,31 @@
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 
+
+
+export const getUserRoles=async ():Promise<string[]>=>{
+  try {
+    const currentUser = auth().currentUser;
+    if (!currentUser) 
+      {return []}
+    const userDoc=await firestore().collection('users').doc(currentUser.uid).get();
+    if (!userDoc.exists) {
+        return [];
+      }
+      const userData=userDoc.data();
+      if (!userData) {
+        return [];
+      }
+      const roles=userData.roles;
+      console.log('trigger roles',roles);
+      return roles;
+
+      
+  } catch (error) {
+    console.error('Error while getting user roles',error);
+    return [];
+  }
+}
 export const checkUserSurveyExists = async (userEmail:string): Promise<boolean> => {
   try {
 
