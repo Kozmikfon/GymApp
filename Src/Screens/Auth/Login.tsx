@@ -56,62 +56,70 @@ export const Login = () => {
 
   const handleLogin = async () => {
     try {
-      if (!validateForm()) return; // Form geçerli değilse çık
+      if (!validateForm()) return;
   
       setError(null);
   
-      // Kullanıcı giriş yapmayı dener
-      const userCrendetials= await auth().signInWithEmailAndPassword(
+      // 1. Firebase ile giriş yap
+      const userCredentials = await auth().signInWithEmailAndPassword(
         formData.email,
         formData.password
       );
   
-      
+      const user = userCredentials.user;
   
-      // Kullanıcının token'ını al
-      const token = await userCrendetials.user?.getIdToken();
-        
-      if (!token) {
-        throw new Error('Kimlik doğrulama başarısız.');
-      }
-      await checkUserSurveyExists(formData.email).then((response) => {
-        if (response) { 
-          navigation.navigate('Home');
-        } else {
-          navigation.navigate('InitialQuestions');
-        }
-       
-      });
-      // E-posta doğrulanmış mı kontrol et
-      if (!userCrendetials.user.emailVerified) {
-        await auth().signOut(); // Kullanıcıyı çıkış yaptır
+      // 2. E-posta doğrulaması yapılmış mı kontrol et
+      if (!user.emailVerified) {
+        await auth().signOut();
         Alert.alert('Hata', 'Lütfen e-postanızı doğrulayın.');
         return;
       }
-
-     
+  
+      // 3. Token al
+      const token = await user.getIdToken();
+      if (!token) {
+        throw new Error('Token alınamadı. Giriş başarısız.');
+      }
+  
+      // 4. Roller al ve yönlendir
+      const roles = await getUserRoles(); // Bu fonksiyon bir dizi dönmeli: ['admin', 'user', ...]
+      if (roles.includes('admin')) {
+        navigation.navigate('AdminDashboard');
+        return;
+      }
+  
+      // 5. Anket durumu kontrolü
+      const surveyExists = await checkUserSurveyExists(formData.email);
+      if (surveyExists) {
+        navigation.navigate('Home');
+      } else {
+        navigation.navigate('InitialQuestions');
+      }
   
       console.log('Giriş başarılı!');
-    } catch (error: unknown) {
+    } catch (error: any) {
       console.error('Giriş hatası:', error);
   
       let errorMessage = 'E-posta veya şifre hatalı.';
   
-      if (error instanceof Error) {
-        const firebaseError = error as { code?: string }; // Firebase hata kodlarını almak için
-  
-        if (firebaseError.code === 'auth/user-not-found') {
-          errorMessage = 'Kullanıcı bulunamadı.';
-        } else if (firebaseError.code === 'auth/wrong-password') {
-          errorMessage = 'Yanlış şifre.';
-        } else if (firebaseError.code === 'auth/too-many-requests') {
-          errorMessage = 'Çok fazla başarısız deneme. Lütfen daha sonra tekrar deneyin.';
-        }
+      if (error.code === 'auth/user-not-found') {
+        errorMessage = 'Kullanıcı bulunamadı.';
+      } else if (error.code === 'auth/wrong-password') {
+        errorMessage = 'Yanlış şifre.';
+      } else if (error.code === 'auth/too-many-requests') {
+        errorMessage = 'Çok fazla başarısız deneme. Lütfen daha sonra tekrar deneyin.';
+      } else if (error.message) {
+        errorMessage = error.message;
       }
   
       setError(errorMessage);
     }
   };
+  
+  
+  
+  
+  
   
 
   return (
