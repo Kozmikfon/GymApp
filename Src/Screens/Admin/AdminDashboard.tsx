@@ -1,6 +1,7 @@
 import React from 'react'
-import { SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-
+import { Alert, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import Firestore from '@react-native-firebase/firestore';
+import { create } from 'react-test-renderer';
 
 interface ExerciseForm {
     name: string;
@@ -37,7 +38,28 @@ export const AdminDashboard = () => {
     const timeOptions = ['15 dakika', '30 dakika', '45 dakika', '1 saat'];
     const packageOptions = ['Bronz', 'Gold','Premium'];
 
-    const saveExercise = () => {
+
+    const saveExercise = async () => {
+      try {
+        if (!exerciseForm.name || !exerciseForm.description || !exerciseForm.imageUrl || !exerciseForm.videoUrl || !exerciseForm.fitnessLevel || !exerciseForm.exerciseGoal || !exerciseForm.timeRequired || !exerciseForm.package) {
+          Alert.alert('Please fill in all fields');
+          return;
+        }
+
+
+
+
+        await Firestore().collection('exercises').add({
+          ...exerciseForm,
+          createdAt: Firestore.FieldValue.serverTimestamp(),
+          updatedAt: Firestore.FieldValue.serverTimestamp(),
+        })
+        
+        
+      } catch (error) {
+        console.log(error);
+        Alert.alert('Error while saving exercise');
+      }
     }
 
 
