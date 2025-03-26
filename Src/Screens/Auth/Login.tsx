@@ -34,28 +34,33 @@ export const Login = () => {
 
     const handleSubmit = async () => {
 
-        try {
-            if (validateForm()) {
-              setError(null);
-              const userCredentials = await auth().signInWithEmailAndPassword(formData.email,formData.password);
-              const token = await userCredentials.user?.getIdToken();
-              if (token) {
-                await getUserRoles().then((roles) => {
-                  console.log(formData.email);
-                  if (roles.includes('admin')) {
-                    navigation.navigate('AdminDashboard');
-                  } else {
-                    checkUserSurveyExists(formData.email).then((response) => {
-                      if (response) {
-                        navigation.navigate('Home');
-                      } else {
-                        navigation.navigate('InitialQuestions');
-                      }
-                    });
-                  }
-                });             
-              }
+      try {
+          if (validateForm()) {
+            setError(null);
+            const userCredentials = await auth().signInWithEmailAndPassword(formData.email,formData.password);
+            const token = await userCredentials.user?.getIdToken();
+            if (token) {
+              await getUserRoles().then((roles) => {
+                    if (roles.includes('admin')) {
+                      navigation.navigate('AdminDashboard');
+                    }else {
+                      checkUserSurveyExists(formData.email).then((response) => {
+                        if (response) {
+                         
+                          navigation.navigate('Home');
+                        }
+                        else {
+                          navigation.navigate('InitialQuestions');
+        
+                        }
+                      })
+                    }
+              })
+            
+            
+            
             }
+          }
     
         } catch (error) {
             setError('Invalid credentials');
