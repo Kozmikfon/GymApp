@@ -46,14 +46,12 @@ export const AdminDashboard = () => {
           return;
         }
 
-
-
-
         await Firestore().collection('exercises').add({
           ...exerciseForm,
           createdAt: Firestore.FieldValue.serverTimestamp(),
-          updatedAt: Firestore.FieldValue.serverTimestamp(),
+          updatedAt: Firestore.FieldValue.serverTimestamp()
         })
+        Alert.alert('Exercise saved successfully');
         
         
       } catch (error) {

@@ -27,6 +27,7 @@ import {
 import {ScreenIndex} from './Src/Screens/ScreenIndex';
 import { AuthProvider } from './Src/Context/AuthContext';
 import { AppNavigator } from './Src/Navigator/AppNavigator';
+import auth from '@react-native-firebase/auth';
 
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -64,6 +65,9 @@ function App(): React.JSX.Element {
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
+
+
+  
 
   return (
     <AuthProvider>
