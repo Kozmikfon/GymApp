@@ -51,12 +51,10 @@ const AdminStack = () => {
     <Stack.Navigator screenOptions={{headerShown:false}}>
       <Stack.Screen name='AdminDashboard' component={AdminDashboard}></Stack.Screen>
     </Stack.Navigator>
-
   )
-
 };
 
-const MainStack=()=>{
+const MainStack = () =>{
   return(
     <Stack.Navigator screenOptions={{headerShown:false}}>
       <Stack.Screen name='Home' component={Home}></Stack.Screen>
@@ -67,10 +65,9 @@ const MainStack=()=>{
 
 export const HomeDrawer = () => {
   return(
-    
       <Drawer.Navigator 
         drawerContent={(props)=> <CustomDrawerContent {...props} />}     
-        screenOptions={{headerShown:true,drawerPosition:'left',drawerType:'front',drawerStyle:{width:300},swipeEnabled:true}}> 
+        screenOptions={{headerShown:true,drawerPosition:'left',drawerType:'front',swipeEnabled:true,drawerStyle:{width:300}}}> 
         <Drawer.Screen name="MainStack" component={MainStack}></Drawer.Screen>
       </Drawer.Navigator>
   )
@@ -87,8 +84,9 @@ export const RootNavigator = () => {
   useEffect(() => {
     const initializeRoute = async () => {
     const userEmail=auth().currentUser?.email;
+    console.log(' trigger user Email',userEmail);
     if(!userEmail){
-      setInitialRoute('AuthStack');
+      setInitialRoute('AuthStack'); 
     }
     else
     {
@@ -105,6 +103,7 @@ export const RootNavigator = () => {
     initializeRoute();
     },[]);
 
+
     useEffect(()=>{
       console.log('initialRoute',initialRoute);
     },[initialRoute]);
@@ -112,14 +111,13 @@ export const RootNavigator = () => {
 
      
 
-     if(loading){
-      return (
-     <View style={{flex:1, justifyContent:'center', alignItems:'center'}} >
-       <ActivityIndicator size='large'  color='blue '/>
-     </View>
-      )
-      
-}
+    // if (loading) {
+    //   return (
+    //     <View style={{flex:1,justifyContent:'center',alignItems:'center'}} >
+    //       <ActivityIndicator size='large' color='blue' />
+    //     </View>
+    //   )
+    // }
 
 
 
@@ -140,14 +138,12 @@ export const RootNavigator = () => {
 };
 
 
-export const AuthStack=()=>{
-  return( 
-    <Stack.Navigator
-    initialRouteName='Login'
-    screenOptions={{headerShown: false}}>
-      <Stack.Screen name='Login' component={Login}></Stack.Screen>
-      <Stack.Screen name='Register' component={Register}></Stack.Screen>
-    </Stack.Navigator>
-   
-  )
-}
+export const AuthStack = () => {
+  return (
+     <Stack.Navigator initialRouteName='Login' screenOptions={{headerShown:false}} >
+       <Stack.Screen name='Login' component={Login} ></Stack.Screen>
+       <Stack.Screen name='Register' component={Register} ></Stack.Screen>
+     </Stack.Navigator>
+
+  ) 
+ }

@@ -22,7 +22,7 @@ interface ExerciseForm {
 
 
 export const AdminDashboard = () => {
-  const {logout}=useAuth();
+  const {logout} = useAuth();   
   const navigation=useNavigation<NavigationProp<RootStackParamList>>();
   
     const [exerciseForm, setExerciseForm] = React.useState<ExerciseForm>({
