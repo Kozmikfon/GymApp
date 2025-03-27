@@ -26,7 +26,7 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 import {ScreenIndex} from './Src/Screens/ScreenIndex';
 import { AuthProvider } from './Src/Context/AuthContext';
-import { AppNavigator, AuthStack, HomeDrawer, RootNavigator } from './Src/Navigator/AppNavigator';
+import { AuthStack, HomeDrawer, RootNavigator } from './Src/Navigator/AppNavigator';
 import auth from '@react-native-firebase/auth';
 import { Drawer } from 'react-native-paper';
 

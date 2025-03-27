@@ -2,6 +2,9 @@ import React from 'react'
 import { Alert, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import Firestore from '@react-native-firebase/firestore';
 import { create } from 'react-test-renderer';
+import { useAuth } from '../../Context/AuthContext';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { RootStackParamList } from '../../interfaces/Naw/RootStackParamList';
 
 interface ExerciseForm {
     name: string;
@@ -19,6 +22,9 @@ interface ExerciseForm {
 
 
 export const AdminDashboard = () => {
+  const {logout}=useAuth();
+  const navigation=useNavigation<NavigationProp<RootStackParamList>>();
+  
     const [exerciseForm, setExerciseForm] = React.useState<ExerciseForm>({
       name: '',
       description: '',
@@ -37,6 +43,15 @@ export const AdminDashboard = () => {
     const exerciseGoals = ['Kilo vermek', 'Kas yapmak', 'Formda kalmak'];
     const timeOptions = ['15 dakika', '30 dakika', '45 dakika', '1 saat'];
     const packageOptions = ['Bronz', 'Gold','Premium'];
+
+
+    const handleLogout = () => {
+      logout();
+      navigation.reset({
+        index: 0,
+        routes: [{name: 'AuthStack'}],
+      })
+    }
 
 
     const saveExercise = async () => {
@@ -165,8 +180,8 @@ export const AdminDashboard = () => {
           <TouchableOpacity style={styles.saveButton} onPress={saveExercise}>
             <Text style={styles.saveButtonText}>Egzersizi Kaydet</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.saveButton} onPress={saveExercise}>
-            <Text style={styles.saveButtonText}>Çıkış</Text>
+          <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+            <Text style={styles.logoutButtonText}>Çıkış</Text>
           </TouchableOpacity>
 
         </View>
@@ -252,9 +267,11 @@ const styles = StyleSheet.create({
       fontWeight: '600',
     },
     logoutButton: {
-      color: '#fff',
-      fontSize: 16,
-      fontWeight: '600',
+      backgroundColor: '#ff3b30',
+      padding: 15,
+      borderRadius: 8,
+      alignItems: 'center',
+      marginTop: 20,
     },
     logoutButtonText: {
       color: '#fff',

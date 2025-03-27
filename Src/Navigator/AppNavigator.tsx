@@ -28,7 +28,7 @@ const CustomDrawerContent = (props:any) => {
     await logout();
     navigation.reset({
       index: 0,
-      routes: [{name: 'Login'}],
+      routes: [{name: 'AuthStack'}]
     })
   }
   return(
@@ -36,7 +36,6 @@ const CustomDrawerContent = (props:any) => {
       <DrawerContentScrollView {...props}>
         <DrawerItemList {...props} />
         </DrawerContentScrollView>
-
     <View style={{flex:1, justifyContent:'center', alignItems:'center'}}>
       <TouchableOpacity onPress={handleLogout}>
         <Text>Logout</Text>
@@ -81,14 +80,15 @@ export const HomeDrawer = () => {
 export const RootNavigator = () => {
 
 
-  const [initialRoute, setInitialRoute] = useState<ScreenNames>('Login');
+  const [initialRoute, setInitialRoute] = useState<ScreenNames>('AuthStack');
   const [loading, setLoading] = useState(true);
+
 
   useEffect(() => {
     const initializeRoute = async () => {
     const userEmail=auth().currentUser?.email;
     if(!userEmail){
-      setInitialRoute('Login');
+      setInitialRoute('AuthStack');
     }
     else
     {
@@ -97,7 +97,7 @@ export const RootNavigator = () => {
         setInitialRoute('AdminDashboard');
       }
       else{
-        setInitialRoute('Home');
+        setInitialRoute('HomeDrawer');
       }
       setLoading(false);
     }
@@ -105,30 +105,35 @@ export const RootNavigator = () => {
     initializeRoute();
     },[]);
 
-    if(loading){
-      return 
-      <View style={{flex:1, justifyContent:'center', alignItems:'center'}} >
-        <ActivityIndicator size='large'  color='blue '/>
-      </View>
+    useEffect(()=>{
+      console.log('initialRoute',initialRoute);
+    },[initialRoute]);
+
+
+     
+
+     if(loading){
+      return (
+     <View style={{flex:1, justifyContent:'center', alignItems:'center'}} >
+       <ActivityIndicator size='large'  color='blue '/>
+     </View>
+      )
       
-    }
+}
 
 
 
   return (
     <NavigationContainer>
-    
       <Stack.Navigator
         initialRouteName= {initialRoute} 
         screenOptions={{headerShown: false}}>
         {/* <Stack.Screen name="InitialQuestions" component={ScreenIndex} />
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="AdminDashboard" component={AdminDashboard} /> */}
-        <Stack.Screen name="AuthStack" component={AuthStack} />
-        <Stack.Screen name="HomeDrawer" component={HomeDrawer} />
-        <Stack.Screen name="AdminDashboard" component={AdminDashboard} />
-
-
+        <Stack.Screen name="AuthStack" component={AuthStack} ></Stack.Screen>
+        <Stack.Screen name="HomeDrawer" component={HomeDrawer} ></Stack.Screen>
+        <Stack.Screen name="AdminDashboard" component={AdminStack} ></Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -136,14 +141,13 @@ export const RootNavigator = () => {
 
 
 export const AuthStack=()=>{
-  return(
-    <NavigationContainer>
+  return( 
     <Stack.Navigator
     initialRouteName='Login'
     screenOptions={{headerShown: false}}>
-      <Stack.Screen name='Login' component={Login}/>
-      <Stack.Screen name='Register' component={Register}/>
+      <Stack.Screen name='Login' component={Login}></Stack.Screen>
+      <Stack.Screen name='Register' component={Register}></Stack.Screen>
     </Stack.Navigator>
-    </NavigationContainer>
+   
   )
 }
