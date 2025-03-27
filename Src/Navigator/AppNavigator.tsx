@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {NavigationContainer} from '@react-navigation/native';
+import {NavigationContainer, NavigationProp, useNavigation} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {RootStackParamList, ScreenNames} from '../interfaces/Naw/RootStackParamList';
 import {ScreenIndex} from '../Screens/ScreenIndex';
@@ -10,12 +10,58 @@ import { AdminDashboard } from '../Screens/Admin/AdminDashboard';
 import auth from '@react-native-firebase/auth';
 import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
 import { getUserRoles } from '../Utils/firebase';
-import { View } from 'react-native';
+import { Text, Touchable, TouchableOpacity, View } from 'react-native';
 import { ActivityIndicator } from 'react-native-paper';
-
-
+import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
+import { DrawerParamList } from '../interfaces/Naw/DrawerParamList';
+import { useAuth } from '../Context/AuthContext';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
+const Drawer=createDrawerNavigator<DrawerParamList>();
+
+
+const CustomDrawerContent = (props:any) => {
+  const {logout}=useAuth();
+  const navigation=useNavigation<NavigationProp<RootStackParamList>>();
+
+
+  const handleLogout=async()=>{
+    await logout();
+    navigation.reset({
+      index: 0,
+      routes: [{name: 'Login'}],
+    })
+  }
+  return(
+    <View style={{flex:1}}> 
+      <DrawerContentScrollView {...props}>
+        <DrawerItemList {...props} />
+        </DrawerContentScrollView>
+
+    <View style={{flex:1, justifyContent:'center', alignItems:'center'}}>
+      <TouchableOpacity onPress={handleLogout}>
+        <Text>Logout</Text>
+      </TouchableOpacity>
+    </View> 
+    </View>
+  )
+}
+
+
+export const HomeDrawer = () => {
+  return(
+    <NavigationContainer>
+      <Drawer.Navigator 
+        drawerContent={(props)=> <CustomDrawerContent {...props} />}     
+        screenOptions={{headerShown:true,drawerPosition:'left',drawerType:'front',drawerStyle:{width:300},swipeEnabled:true}}> 
+        <Drawer.Screen name="AppNavigator" component={AppNavigator}></Drawer.Screen>
+      </Drawer.Navigator>
+    </NavigationContainer>
+    
+    
+  )
+}
+
 
 export const AppNavigator = () => {
 
@@ -55,7 +101,7 @@ export const AppNavigator = () => {
 
 
   return (
-    <NavigationContainer>
+    
       <Stack.Navigator
         initialRouteName= {initialRoute} 
         screenOptions={{headerShown: false}}>
@@ -66,6 +112,6 @@ export const AppNavigator = () => {
         <Stack.Screen name="AdminDashboard" component={AdminDashboard} />
 
       </Stack.Navigator>
-    </NavigationContainer>
+    
   );
 };

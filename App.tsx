@@ -26,8 +26,9 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 import {ScreenIndex} from './Src/Screens/ScreenIndex';
 import { AuthProvider } from './Src/Context/AuthContext';
-import { AppNavigator } from './Src/Navigator/AppNavigator';
+import { AppNavigator, HomeDrawer } from './Src/Navigator/AppNavigator';
 import auth from '@react-native-firebase/auth';
+import { Drawer } from 'react-native-paper';
 
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -71,7 +72,7 @@ function App(): React.JSX.Element {
 
   return (
     <AuthProvider>
-      <AppNavigator></AppNavigator>
+      <HomeDrawer></HomeDrawer>
     </AuthProvider>
   );
 }
