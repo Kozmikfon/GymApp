@@ -6,3 +6,6 @@ export type RootStackParamList = {
     AdminDashboard:undefined;
        
 }
+
+
+export type ScreenNames=keyof RootStackParamList;
