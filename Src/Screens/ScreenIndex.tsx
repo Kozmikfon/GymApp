@@ -4,14 +4,13 @@ import {
   SafeAreaView,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
-import { NavigationContainerProps, NavigationProp, useNavigation } from '@react-navigation/native';
+import {  NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../interfaces/Naw/RootStackParamList';
 
 interface Option {

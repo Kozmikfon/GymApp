@@ -8,9 +8,8 @@ import {Register} from '../Screens/Auth/Register';
 import  Home  from '../Screens/Home';
 import { AdminDashboard } from '../Screens/Admin/AdminDashboard';
 import auth from '@react-native-firebase/auth';
-import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
 import { getUserRoles } from '../Utils/firebase';
-import { Text, Touchable, TouchableOpacity, View } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
 import { ActivityIndicator } from 'react-native-paper';
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
 import { DrawerParamList } from '../interfaces/Naw/DrawerParamList';
@@ -48,29 +47,45 @@ const CustomDrawerContent = (props:any) => {
 }
 
 
+const AdminStack = () => {
+  return(
+    <Stack.Navigator screenOptions={{headerShown:false}}>
+      <Stack.Screen name='AdminDashboard' component={AdminDashboard}></Stack.Screen>
+    </Stack.Navigator>
+
+  )
+
+};
+
+const MainStack=()=>{
+  return(
+    <Stack.Navigator screenOptions={{headerShown:false}}>
+      <Stack.Screen name='Home' component={Home}></Stack.Screen>
+      <Stack.Screen name='InitialQuestions' component={ScreenIndex}></Stack.Screen>
+    </Stack.Navigator>
+  )
+};
+
 export const HomeDrawer = () => {
   return(
-    <NavigationContainer>
+    
       <Drawer.Navigator 
         drawerContent={(props)=> <CustomDrawerContent {...props} />}     
         screenOptions={{headerShown:true,drawerPosition:'left',drawerType:'front',drawerStyle:{width:300},swipeEnabled:true}}> 
-        <Drawer.Screen name="AppNavigator" component={AppNavigator}></Drawer.Screen>
+        <Drawer.Screen name="MainStack" component={MainStack}></Drawer.Screen>
       </Drawer.Navigator>
-    </NavigationContainer>
-    
-    
   )
 }
 
 
-export const AppNavigator = () => {
+export const RootNavigator = () => {
 
 
   const [initialRoute, setInitialRoute] = useState<ScreenNames>('Login');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const initialRoute = async () => {
+    const initializeRoute = async () => {
     const userEmail=auth().currentUser?.email;
     if(!userEmail){
       setInitialRoute('Login');
@@ -87,7 +102,7 @@ export const AppNavigator = () => {
       setLoading(false);
     }
   }
-    initialRoute();
+    initializeRoute();
     },[]);
 
     if(loading){
@@ -101,17 +116,34 @@ export const AppNavigator = () => {
 
 
   return (
+    <NavigationContainer>
     
       <Stack.Navigator
         initialRouteName= {initialRoute} 
         screenOptions={{headerShown: false}}>
-        <Stack.Screen name="InitialQuestions" component={ScreenIndex} />
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="Register" component={Register} />
+        {/* <Stack.Screen name="InitialQuestions" component={ScreenIndex} />
         <Stack.Screen name="Home" component={Home} />
+        <Stack.Screen name="AdminDashboard" component={AdminDashboard} /> */}
+        <Stack.Screen name="AuthStack" component={AuthStack} />
+        <Stack.Screen name="HomeDrawer" component={HomeDrawer} />
         <Stack.Screen name="AdminDashboard" component={AdminDashboard} />
 
+
       </Stack.Navigator>
-    
+    </NavigationContainer>
   );
 };
+
+
+export const AuthStack=()=>{
+  return(
+    <NavigationContainer>
+    <Stack.Navigator
+    initialRouteName='Login'
+    screenOptions={{headerShown: false}}>
+      <Stack.Screen name='Login' component={Login}/>
+      <Stack.Screen name='Register' component={Register}/>
+    </Stack.Navigator>
+    </NavigationContainer>
+  )
+}

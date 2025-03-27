@@ -43,11 +43,12 @@ export const Login = () => {
               await getUserRoles().then((roles) => {
                     if (roles.includes('admin')) {
                       navigation.navigate('AdminDashboard');
+                      
                     }else {
                       checkUserSurveyExists(formData.email).then((response) => {
                         if (response) {
                          
-                          navigation.navigate('Home');
+                          navigation.navigate('HomeDrawer');
                         }
                         else {
                           navigation.navigate('InitialQuestions');

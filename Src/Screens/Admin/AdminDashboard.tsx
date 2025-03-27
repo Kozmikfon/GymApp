@@ -165,6 +165,10 @@ export const AdminDashboard = () => {
           <TouchableOpacity style={styles.saveButton} onPress={saveExercise}>
             <Text style={styles.saveButtonText}>Egzersizi Kaydet</Text>
           </TouchableOpacity>
+          <TouchableOpacity style={styles.saveButton} onPress={saveExercise}>
+            <Text style={styles.saveButtonText}>Çıkış</Text>
+          </TouchableOpacity>
+
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -243,6 +247,16 @@ const styles = StyleSheet.create({
       marginTop: 20,
     },
     saveButtonText: {
+      color: '#fff',
+      fontSize: 16,
+      fontWeight: '600',
+    },
+    logoutButton: {
+      color: '#fff',
+      fontSize: 16,
+      fontWeight: '600',
+    },
+    logoutButtonText: {
       color: '#fff',
       fontSize: 16,
       fontWeight: '600',
