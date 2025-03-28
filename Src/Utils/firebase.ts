@@ -116,10 +116,20 @@ export const getFilteredExercises=async (userEmail: string):Promise<Exercise[]> 
     if(!surveyResults){
       return [];}
       const userAnswers=surveyResults.answers.reduce((acc:userSurveyAnswers,curr:any) => {
-        console.log('trigger curr',curr);
-        console.log('trigger acc',acc)
+
+        if(curr.question.includes('seviye')){
+          acc.fitnesLevel=curr.answer;
+        }
+        else if(curr.question.includes('hedef')){
+          acc.exerciseGoal=curr.answer;
+        } 
+        else if(curr.question.includes('zaman')){
+          acc.timeRequired=curr.answer;
+        }
         return acc;
-      },{fitnessLevel:'',exerciseGoal:'',timeRequired:''});
+      },{fitnesLevel:'',exerciseGoal:'',timeRequired:''});
+
+      
         // bütün egzersizleri getirir
         const exerciseSnapshot=await firestore().collection('exercises').get();
         const exercises=exerciseSnapshot.docs.map((doc) => ({
