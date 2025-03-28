@@ -117,6 +117,7 @@ export const getFilteredExercises=async (userEmail: string):Promise<Exercise[]> 
         if(curr.question.includes('fitnesLevel')) {
           acc.fitnesLevel=curr.answer;
         }
+        return [];
       })
 
       return [];

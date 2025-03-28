@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { View, Text, ScrollView, StyleSheet } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
-import { getUserSurveyResults } from "../Utils/firebase";
+import { getFilteredExercises, getUserSurveyResults } from "../Utils/firebase";
 import auth from '@react-native-firebase/auth';
 
 
@@ -9,7 +9,7 @@ export const Home = () => {
 
   useEffect(() => {
     const userEmail=auth().currentUser?.email
-    getUserSurveyResults(userEmail || '').then((results) => {
+    getFilteredExercises(userEmail || '').then((results) => {
       console.log('trigger Results:', results);
     })
   }, [])
