@@ -110,18 +110,34 @@ export const getUserSurveyResults = async (userEmail:string) => {
 
 export const getFilteredExercises=async (userEmail: string):Promise<Exercise[]> => {
   try {
+    // kullanıcının yapmış odluğu seçimlerdir
     const surveyResults = await getUserSurveyResults(userEmail);
+
     if(!surveyResults){
       return [];}
       const userAnswers=surveyResults.answers.reduce((acc:userSurveyAnswers,curr:any) => {
-        if(curr.question.includes('fitnesLevel')) {
-          acc.fitnesLevel=curr.answer;
-        }
-        return [];
-      })
+        console.log('trigger curr',curr);
+        console.log('trigger acc',acc)
+        return acc;
+      },{fitnessLevel:'',exerciseGoal:'',timeRequired:''});
+        // bütün egzersizleri getirir
+        const exerciseSnapshot=await firestore().collection('exercises').get();
+        const exercises=exerciseSnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        })) as Exercise[];
 
-      return [];
-
+        return exercises.filter((exercise) => {
+          const LevelMatch = exercise.fitnessLevel === userAnswers.fitnessLevel;
+          console.log('trigger LevelMatch',LevelMatch);
+          const GoalMatch = exercise.exerciseGoal === userAnswers.exerciseGoal ;
+          console.log('trigger GoalMatch',GoalMatch);
+          const timeMatch = exercise.timeRequired.includes(userAnswers.timeRequired);
+          console.log('trigger timeMatch',timeMatch);
+          const matchCount=[LevelMatch,GoalMatch,timeMatch].filter(Boolean).length;
+          return matchCount >=2;
+        });
+         
     
   } catch (error) {
     console.error("Error while getting filtered exercises",error);

@@ -14,36 +14,10 @@ import { ActivityIndicator } from 'react-native-paper';
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
 import { DrawerParamList } from '../interfaces/Naw/DrawerParamList';
 import { useAuth } from '../Context/AuthContext';
+import { CustomDrawerContent } from './CustomDrawerContent';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const Drawer=createDrawerNavigator<DrawerParamList>();
-
-
-const CustomDrawerContent = (props:any) => {
-  const {logout}=useAuth();
-  const navigation=useNavigation<NavigationProp<RootStackParamList>>();
-
-
-  const handleLogout=async()=>{
-    await logout();
-    navigation.reset({
-      index: 0,
-      routes: [{name: 'AuthStack'}]
-    })
-  }
-  return(
-    <View style={{flex:1}}> 
-      <DrawerContentScrollView {...props}>
-        <DrawerItemList {...props} />
-        </DrawerContentScrollView>
-    <View style={{flex:1, justifyContent:'center', alignItems:'center'}}>
-      <TouchableOpacity onPress={handleLogout}>
-        <Text>Logout</Text>
-      </TouchableOpacity>
-    </View> 
-    </View>
-  )
-}
 
 
 const AdminStack = () => {
@@ -111,12 +85,12 @@ export const RootNavigator = () => {
 
      
 
-    // if (loading) {
+    //  if (loading) {
     //   return (
-    //     <View style={{flex:1,justifyContent:'center',alignItems:'center'}} >
-    //       <ActivityIndicator size='large' color='blue' />
+    //    <View style={{flex:1,justifyContent:'center',alignItems:'center'}} >
+    //      <ActivityIndicator size='large' color='blue' />
     //     </View>
-    //   )
+    //    )
     // }
 
 

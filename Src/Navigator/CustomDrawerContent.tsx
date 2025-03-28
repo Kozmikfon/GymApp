@@ -1,12 +1,12 @@
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { useAuth } from "../Context/AuthContext";
-import { RootStackParamList } from "../Interfaces/Naw/RootStackParamList";
 import LinearGradient from "react-native-linear-gradient";
-import { DrawerContentScrollView } from "@react-navigation/drawer";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { DrawerContentScrollView } from "@react-navigation/drawer";
+import { RootStackParamList } from "../interfaces/Naw/RootStackParamList";
 import React from "react";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import auth from '@react-native-firebase/auth';
+
 export const CustomDrawerContent = (props:any) => {
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
     const { logout } = useAuth();
@@ -17,6 +17,7 @@ export const CustomDrawerContent = (props:any) => {
         routes:[{name:'AuthStack'}]
       })
     }
+
     return (
       <LinearGradient
         colors={['#4CAF50', '#2E7D32']}
@@ -26,8 +27,8 @@ export const CustomDrawerContent = (props:any) => {
           {/* Profile Section */}
           <View style={stylesCustomDrawer.profileSection}>
             
-            <Text style={stylesCustomDrawer.profileName}>{auth().currentUser?.displayName}</Text>
-            <Text style={stylesCustomDrawer.profileEmail}> {auth().currentUser?.email} </Text>
+          <Text style={stylesCustomDrawer.profileName}>john doe</Text>
+          <Text style={stylesCustomDrawer.profileEmail}> hohn@gmail.com </Text>
           </View>
   
           {/* Menu Items */}
@@ -50,7 +51,7 @@ export const CustomDrawerContent = (props:any) => {
   
             <TouchableOpacity 
               style={stylesCustomDrawer.menuItem}
-              //onPress={() => navigation.navigate('HomeDrawer',{screen:'Calendar'})}
+              onPress={() => props.navigation.navigate('Progress')}
             >
               <MaterialCommunityIcons name="chart-line" size={24} color="#fff" />
               <Text style={stylesCustomDrawer.menuText}>İlerleme</Text>
@@ -58,7 +59,7 @@ export const CustomDrawerContent = (props:any) => {
   
             <TouchableOpacity 
               style={stylesCustomDrawer.menuItem}
-              //onPress={() => navigation.navigate('HomeDrawer',{screen:'Profile'})}
+              onPress={() => props.navigation.navigate('Profile')}
             >
               <MaterialCommunityIcons name="account" size={24} color="#fff" />
               <Text style={stylesCustomDrawer.menuText}>Profil</Text>
@@ -77,7 +78,6 @@ export const CustomDrawerContent = (props:any) => {
       </LinearGradient>
     );
   };
-
   const stylesCustomDrawer = StyleSheet.create({
     container: {
       flex: 1,
