@@ -132,6 +132,7 @@ export const RootNavigator = () => {
         <Stack.Screen name="AuthStack" component={AuthStack} ></Stack.Screen>
         <Stack.Screen name="HomeDrawer" component={HomeDrawer} ></Stack.Screen>
         <Stack.Screen name="AdminDashboard" component={AdminStack} ></Stack.Screen>
+        
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -143,6 +144,7 @@ export const AuthStack = () => {
      <Stack.Navigator initialRouteName='Login' screenOptions={{headerShown:false}} >
        <Stack.Screen name='Login' component={Login} ></Stack.Screen>
        <Stack.Screen name='Register' component={Register} ></Stack.Screen>
+        
      </Stack.Navigator>
 
   ) 

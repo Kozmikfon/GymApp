@@ -2,6 +2,26 @@ import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 
 
+export interface Exercise{
+    id:string;
+    name:string;
+    description:string;
+    imageUrl:string;
+    videoUrl:string;
+    fitnessLevel:string;
+    exerciseGoal:string;
+    timeRequired:string;
+    package:string;
+    createdAt:any;
+    updateAt:any;
+}
+
+interface userSurveyAnswers{
+  fitnesLevel:string;
+  exerciseGoal:string;
+  timeRequired:string;
+
+}
 
 export const getUserRoles = async ():Promise<string[]> => {
   try {
@@ -44,9 +64,6 @@ export const checkUserSurveyExists = async (userEmail:string): Promise<boolean> 
 
 }
   
-
-
-
 export const createUserInFirestore = async (
   uid: string,
   email: string,
@@ -69,5 +86,44 @@ export const createUserInFirestore = async (
   } catch (error) {
     console.log('error creating user in firestore');
     return false;
+  }
+}
+
+export const getUserSurveyResults = async (userEmail:string) => {
+  try {
+    const surveySnapshoot= await firestore().collection('answers').where('answers.email','==',userEmail).get();
+    console.log('trigger survey snapshot',surveySnapshoot);
+    if(surveySnapshoot.empty){
+      return null;
+    }
+    const surveyData = surveySnapshoot.docs[0].data().answers;
+    return {
+      ...surveyData,
+      answers:surveyData.answers || []
+    }
+
+  } catch (error) {
+    console.error("Error while getting user survey results",error);
+    return null;
+  }
+}
+
+export const getFilteredExercises=async (userEmail: string):Promise<Exercise[]> => {
+  try {
+    const surveyResults = await getUserSurveyResults(userEmail);
+    if(!surveyResults){
+      return [];}
+      const userAnswers=surveyResults.answers.reduce((acc:userSurveyAnswers,curr:any) => {
+        if(curr.question.includes('fitnesLevel')) {
+          acc.fitnesLevel=curr.answer;
+        }
+      })
+
+      return [];
+
+    
+  } catch (error) {
+    console.error("Error while getting filtered exercises",error);
+    return [];
   }
 }
