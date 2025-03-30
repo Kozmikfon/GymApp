@@ -14,7 +14,7 @@ export const Home = () => {
     })
   }, [])
 
-  const workoutCategories = ["Strength", "Cardio", "Flexibility", "HIIT", "Yoga", "Pilates","Body"];
+  const workoutCategories = ["Strength", "Cardio", "Flexibility", "HIIT", "Yoga", "Pilates",];
 
   return (
     <View style={styles.container}>
