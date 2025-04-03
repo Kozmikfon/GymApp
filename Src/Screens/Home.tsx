@@ -3,9 +3,12 @@ import { View, Text, ScrollView, StyleSheet } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 import { getFilteredExercises, getUserSurveyResults } from "../Utils/firebase";
 import auth from '@react-native-firebase/auth';
+import { FlatList } from "react-native-gesture-handler";
+import { Exercise } from "../interfaces/Props/Exercise";
 
 
 export const Home = () => {
+  const [exercises,setExercises]=React.useState<Exercise>([]);
 
   useEffect(() => {
     const userEmail=auth().currentUser?.email
@@ -17,6 +20,7 @@ export const Home = () => {
   const workoutCategories = ["Strength", "Cardio", "Flexibility", "HIIT", "Yoga", "Pilates",];
 
   return (
+    <ScrollView>
     <View style={styles.container}>
       {/* Üst Bölüm */}
       <LinearGradient colors={["#2E7D32", "#4CAF50"]} style={styles.header}>
@@ -52,6 +56,12 @@ export const Home = () => {
         </ScrollView>
       </View>
     </View>
+
+          <FlatList>
+
+          </FlatList>
+
+  </ScrollView>
   );
 };
 

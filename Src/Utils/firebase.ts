@@ -1,20 +1,8 @@
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
+import { Exercise } from '../interfaces/Props/Exercise';
 
 
-export interface Exercise{
-    id:string;
-    name:string;
-    description:string;
-    imageUrl:string;
-    videoUrl:string;
-    fitnessLevel:string;
-    exerciseGoal:string;
-    timeRequired:string;
-    package:string;
-    createdAt:any;
-    updateAt:any;
-}
 
 interface userSurveyAnswers{
   fitnesLevel:string;
