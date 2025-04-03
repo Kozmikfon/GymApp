@@ -1,19 +1,22 @@
 import React, { useEffect } from "react";
-import { View, Text, ScrollView, StyleSheet } from "react-native";
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 import { getFilteredExercises, getUserSurveyResults } from "../Utils/firebase";
 import auth from '@react-native-firebase/auth';
 import { FlatList } from "react-native-gesture-handler";
 import { Exercise } from "../interfaces/Props/Exercise";
+import { Item } from "react-native-paper/lib/typescript/components/Drawer/Drawer";
+import { Image } from "react-native-reanimated/lib/typescript/Animated";
 
 
 export const Home = () => {
-  const [exercises,setExercises]=React.useState<Exercise>([]);
+  const [exercises,setExercises]=React.useState<Exercise[]>([]);
 
   useEffect(() => {
     const userEmail=auth().currentUser?.email
     getFilteredExercises(userEmail || '').then((results) => {
       console.log('trigger Results:', results);
+      setExercises(results);
     })
   }, [])
 
@@ -57,7 +60,24 @@ export const Home = () => {
       </View>
     </View>
 
-          <FlatList>
+          <FlatList
+          data={exercises}
+          keyExtractor={(item)=> item.id}
+          showsHorizontalScrollIndicator={false}
+          renderItem={({item}) => (
+            <TouchableOpacity style={flatListStyle.exerciseCard}>
+              <LinearGradient colors= {['#4CAF50','#2E7D32']} style={flatListStyle.packageBadge}>
+                <Text style={flatListStyle.packageText}>{item.package}</Text>
+              </LinearGradient>
+              {
+              item.imageUrl && (
+                <Image ></Image>
+              )
+              }
+              
+
+            </TouchableOpacity>
+  )} >
 
           </FlatList>
 
@@ -131,6 +151,89 @@ const styles = StyleSheet.create({
   workoutTagText: {
     color: "white",
     fontWeight: "bold",
+  },
+});
+
+const flatListStyle = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 16,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 16,
+    color: '#333',
+  },
+  exerciseCard: {
+    backgroundColor: '#fff',
+    padding: 16,
+    marginBottom: 12,
+    borderRadius: 12,
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    position: 'relative',
+    overflow: 'visible', // overflow'u visible yapıyoruz
+  },
+  packageBadge: {
+    position: 'absolute',
+    right: 16,
+    top: 16,
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderRadius: 12,
+    zIndex: 1, // Z-index eklendi
+    elevation: 5, // Android için elevation eklendi
+  },
+  packageText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 12,
+  },
+  exerciseImage: {
+    width: '100%',
+    height: 200,
+    borderRadius: 8,
+    marginBottom: 12,
+    zIndex: 0, // Resmin z-index'ini düşük tutuyoruz
+  },
+  exerciseName: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 8,
+    color: '#333',
+  },
+  exerciseDesc: {
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 12,
+    lineHeight: 20,
+  },
+  detailsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 8,
+  },
+  detailItem: {
+    flex: 1,
+  },
+  detailLabel: {
+    fontSize: 12,
+    color: '#999',
+    marginBottom: 4,
+  },
+  detailValue: {
+    fontSize: 14,
+    color: '#333',
+    fontWeight: '500',
   },
 });
 
