@@ -61,25 +61,43 @@ export const Home = () => {
       </View>
     
 
-          <FlatList
-          data={exercises}
-          keyExtractor={(item)=> item.id}
-          showsHorizontalScrollIndicator={false}
-          renderItem={({item}) => (
-            
-            <TouchableOpacity style={flatListStyle.exerciseCard}>
-              <LinearGradient colors= {['#4CAF50','#2E7D32']} style={flatListStyle.packageBadge}>
-                <Text style={flatListStyle.packageText}>{item.package}</Text>
-              </LinearGradient>
-              {
-              item.imageUrl && (
-                <Image style={flatListStyle.exerciseImage} source={{uri:item.imageUrl}}/>)
-                
-              }
+      <FlatList
+            data={exercises}
+            keyExtractor={(item) => item.id}
+            showsVerticalScrollIndicator={false}
+            renderItem={({item}) => (
+              <TouchableOpacity style={flatListStyles.exerciseCard} 
               
-            </TouchableOpacity>
-            
-          )} >
+              
+              > 
+                <LinearGradient colors={['#4CAF50', '#2E7D32']} style={flatListStyles.packageBadge} >
+                  <Text style={flatListStyles.packageText}>{item.package}</Text>
+                </LinearGradient>
+                {
+                  item.imageUrl && (
+                    <Image style={flatListStyles.exerciseImage} source={{uri:item.imageUrl}} />
+                  )
+                }
+                <Text style={flatListStyles.exerciseName}>{item.name}</Text>
+                <Text style={flatListStyles.exerciseDesc}>{item.description}</Text>
+                <View style={flatListStyles.detailsContainer}>
+                  <View style={flatListStyles.detailItem}>
+                    <Text style={flatListStyles.detailLabel}>Fitness Level</Text>
+                    <Text style={flatListStyles.detailValue}>{item.fitnessLevel}</Text>
+                  </View>
+                  <View style={flatListStyles.detailItem}>
+                    <Text style={flatListStyles.detailLabel}>Exercise Goal</Text>
+                    <Text style={flatListStyles.detailValue}>{item.exerciseGoal}</Text>
+                  </View>
+                  <View style={flatListStyles.detailItem}>
+                    <Text style={flatListStyles.detailLabel}>Time</Text>
+                    <Text style={flatListStyles.detailValue}>{item.timeRequired}</Text>
+                  </View>
+                  </View>
+              </TouchableOpacity>
+            )}
+          >
+
           </FlatList>
   </>
   );
@@ -173,7 +191,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const flatListStyle = StyleSheet.create({
+const flatListStyles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
