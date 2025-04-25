@@ -6,7 +6,8 @@ import auth from '@react-native-firebase/auth';
 import { FlatList } from "react-native-gesture-handler";
 import { Exercise } from "../interfaces/Props/Exercise";
 import { Item } from "react-native-paper/lib/typescript/components/Drawer/Drawer";
-import { Image } from "react-native-reanimated/lib/typescript/Animated";
+import { Image } from "react-native";
+
 
 
 export const Home = () => {
@@ -23,8 +24,8 @@ export const Home = () => {
   const workoutCategories = ["Strength", "Cardio", "Flexibility", "HIIT", "Yoga", "Pilates",];
 
   return (
-    <ScrollView>
-    <View style={styles.container}>
+  <>
+    
       {/* Üst Bölüm */}
       <LinearGradient colors={["#2E7D32", "#4CAF50"]} style={styles.header}>
         <Text style={styles.headerText}>Welcome Back!</Text>
@@ -48,40 +49,39 @@ export const Home = () => {
       </View>
 
       {/* Antrenman Türleri */}
-      <View style={styles.workoutSection}>
-        <Text style={styles.workoutTitle}>Workouts</Text>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.scrollViewContent}>
-          {workoutCategories.map((item) => (
-            <View key={item} style={styles.workoutTag}>
-              <Text style={styles.workoutTagText}>{item}</Text>
-            </View>
+      <View style={styles.workoutsContainer}>
+        <Text style={styles.sectionTitle}>Workouts</Text>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          {['Strength', 'Cardio', 'Flexibility', 'HIIT'].map((category) => (
+            <TouchableOpacity key={category} style={styles.categoryButton} >
+              <Text style={styles.categoryText}>{category}</Text>
+            </TouchableOpacity>
           ))}
         </ScrollView>
       </View>
-    </View>
+    
 
           <FlatList
           data={exercises}
           keyExtractor={(item)=> item.id}
           showsHorizontalScrollIndicator={false}
           renderItem={({item}) => (
+            
             <TouchableOpacity style={flatListStyle.exerciseCard}>
               <LinearGradient colors= {['#4CAF50','#2E7D32']} style={flatListStyle.packageBadge}>
                 <Text style={flatListStyle.packageText}>{item.package}</Text>
               </LinearGradient>
               {
               item.imageUrl && (
-                <Image ></Image>
-              )
+                <Image style={flatListStyle.exerciseImage} source={{uri:item.imageUrl}}/>)
+                
               }
               
-
             </TouchableOpacity>
-  )} >
-
+            
+          )} >
           </FlatList>
-
-  </ScrollView>
+  </>
   );
 };
 
@@ -95,10 +95,26 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingTop: 40,
   },
+  categoryButton: {
+    backgroundColor: '#4CAF50',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 20,
+    marginRight: 10,
+  },
   headerText: {
     fontSize: 22,
     fontWeight: "bold",
     color: "white",
+  },
+  categoryText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 15,
   },
   dateText: {
     fontSize: 14,
@@ -140,6 +156,9 @@ const styles = StyleSheet.create({
   scrollViewContent: {
     flexDirection: "row",
     paddingVertical: 10,
+  },
+  workoutsContainer: {
+    padding: 20,
   },
   workoutTag: {
     backgroundColor: "#2e7d32",
