@@ -1,81 +1,75 @@
 import React from 'react'
-import { Alert, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import Firestore from '@react-native-firebase/firestore';
-import { create } from 'react-test-renderer';
+import { SafeAreaView,StyleSheet, ScrollView, Text, TouchableOpacity, View, TextInput, Alert } from 'react-native'
+import firestore from '@react-native-firebase/firestore';
 import { useAuth } from '../../Context/AuthContext';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
-import { RootStackParamList } from '../../interfaces/Naw/RootStackParamList';
-
+import { RootStackParamList } from '../../Interfaces/Naw/RootStackParamList';
 interface ExerciseForm {
-    name: string;
-    description: string;
-    imageUrl: string;
-    videoUrl: string;
-    fitnessLevel: string;
-    exerciseGoal: string;
-    timeRequired: string;
-    package: string;
+    name:string;
+    description:string;
+    imageUrl:string;
+    videoUrl:string;
+    fitnessLevel:string;
+    exerciseGoal:string;
+    timeRequired:string;
+    package:string
 }
 
 
 
-
-
 export const AdminDashboard = () => {
-  const {logout} = useAuth();   
-  const navigation=useNavigation<NavigationProp<RootStackParamList>>();
-  
-    const [exerciseForm, setExerciseForm] = React.useState<ExerciseForm>({
-      name: '',
-      description: '',
-      imageUrl: '',
-      videoUrl: '',
-      fitnessLevel: '',
-      exerciseGoal: '',
-      timeRequired: '',
-      package: '',
+  const {logout} = useAuth();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+    const [exerciseForm,setExerciseForm] = React.useState<ExerciseForm>({
+        name: '',
+        description: '',
+        imageUrl: '',
+        videoUrl: '',
+        fitnessLevel: '',
+        exerciseGoal: '',
+        timeRequired: '',
+        package: ''
     });
-    
+
 
 
 
     const fitnessLevels = ['Başlangıç', 'Orta', 'İleri'];
-    const exerciseGoals = ['Kilo vermek', 'Kas yapmak', 'Formda kalmak'];
-    const timeOptions = ['15 dakika', '30 dakika', '45 dakika', '1 saat'];
-    const packageOptions = ['Bronz', 'Gold','Premium'];
+    const exerciseGoals = ['Kilo vermek', 'Kas kazanmak', 'Sağlıklı Yaşam'];
+    const timeOptions = ['30 dakika', '1 saat', '1.5 saat ve üzeri'];
+    const packageOptions = ['Bronz','Gold','Platinium'];    
 
 
-    const handleLogout = () => {
+    const handleLogout = () =>{
       logout();
       navigation.reset({
-        index: 0,
-        routes: [{name: 'AuthStack'}],
+        index:0,
+        routes:[{name:'AuthStack'}]
       })
     }
 
 
     const saveExercise = async () => {
       try {
-        if (!exerciseForm.name || !exerciseForm.description || !exerciseForm.imageUrl || !exerciseForm.videoUrl || !exerciseForm.fitnessLevel || !exerciseForm.exerciseGoal || !exerciseForm.timeRequired || !exerciseForm.package) {
+        if (!exerciseForm.name || !exerciseForm.description || !exerciseForm.imageUrl || !exerciseForm.videoUrl || !exerciseForm.fitnessLevel || !exerciseForm.exerciseGoal || !exerciseForm.timeRequired) {
           Alert.alert('Please fill in all fields');
           return;
+          
         }
 
-        await Firestore().collection('exercises').add({
+        await firestore().collection('exercises').add({
           ...exerciseForm,
-          createdAt: Firestore.FieldValue.serverTimestamp(),
-          updatedAt: Firestore.FieldValue.serverTimestamp()
+          createdAt: firestore.FieldValue.serverTimestamp(),  
+          updatedAt: firestore.FieldValue.serverTimestamp()
         })
+
         Alert.alert('Exercise saved successfully');
-        
-        
+
       } catch (error) {
         console.log(error);
-        Alert.alert('Error while saving exercise');
+        Alert.alert('An error occurred. Please try again later.');
       }
     }
-
-
 
 
 
@@ -183,12 +177,12 @@ export const AdminDashboard = () => {
           <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
             <Text style={styles.logoutButtonText}>Çıkış</Text>
           </TouchableOpacity>
-
         </View>
       </ScrollView>
     </SafeAreaView>
   )
 }
+
 
 const styles = StyleSheet.create({
     container: {
@@ -267,7 +261,7 @@ const styles = StyleSheet.create({
       fontWeight: '600',
     },
     logoutButton: {
-      backgroundColor: '#ff3b30',
+      backgroundColor: '#FF3B30',
       padding: 15,
       borderRadius: 8,
       alignItems: 'center',
