@@ -7,6 +7,9 @@ export type RootStackParamList = {
     AdminDashboard:undefined;
     HomeDrawer:undefined;
     ExerciseDetail:{exercise:undefined};
+    Profile:undefined;
+    DrawersStack:undefined;
+    SubscriptionPage:undefined;
 }
 
 

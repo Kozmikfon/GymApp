@@ -7,6 +7,8 @@ import { RootStackParamList } from "../interfaces/Naw/RootStackParamList";
 import React from "react";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import auth from '@react-native-firebase/auth';
+
+
 export const CustomDrawerContent = (props:any) => {
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
     const { logout } = useAuth();
@@ -59,7 +61,7 @@ export const CustomDrawerContent = (props:any) => {
   
             <TouchableOpacity 
               style={stylesCustomDrawer.menuItem}
-              onPress={() => props.navigation.navigate('Profile')}
+              onPress={() => navigation.navigate('Profile')}
             >
               <MaterialCommunityIcons name="account" size={24} color="#fff" />
               <Text style={stylesCustomDrawer.menuText}>Profil</Text>

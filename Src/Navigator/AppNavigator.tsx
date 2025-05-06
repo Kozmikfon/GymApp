@@ -16,6 +16,7 @@ import { DrawerParamList } from '../interfaces/Naw/DrawerParamList';
 import { useAuth } from '../Context/AuthContext';
 import { CustomDrawerContent } from './CustomDrawerContent';
 import { ExerciseDetail } from '../Screens/Detail/ExerciseDetail';
+import { Profile } from '../Screens/User/Profile';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const Drawer=createDrawerNavigator<DrawerParamList>();
@@ -35,6 +36,7 @@ const MainStack = () =>{
       <Stack.Screen name='Home' component={Home}></Stack.Screen>
       <Stack.Screen name='ExerciseDetail' component={ExerciseDetail}></Stack.Screen>
       <Stack.Screen name='InitialQuestions' component={ScreenIndex}></Stack.Screen>
+      <Stack.Screen name='Profile' component={Profile}></Stack.Screen>
     </Stack.Navigator>
   )
 };
@@ -49,6 +51,7 @@ export const HomeDrawer = () => {
   )
 }
 
+  
 
 export const RootNavigator = () => {
 
@@ -109,6 +112,7 @@ export const RootNavigator = () => {
         <Stack.Screen name="AuthStack" component={AuthStack} ></Stack.Screen>
         <Stack.Screen name="HomeDrawer" component={HomeDrawer} ></Stack.Screen>
         <Stack.Screen name="AdminDashboard" component={AdminStack} ></Stack.Screen>
+        <Stack.Screen name="DrawersStack" component={DrawersStack} ></Stack.Screen>
         
       </Stack.Navigator>
     </NavigationContainer>
@@ -121,8 +125,19 @@ export const AuthStack = () => {
      <Stack.Navigator initialRouteName='Login' screenOptions={{headerShown:false}} >
        <Stack.Screen name='Login' component={Login} ></Stack.Screen>
        <Stack.Screen name='Register' component={Register} ></Stack.Screen>
+       
         
      </Stack.Navigator>
 
   ) 
  }
+
+ export const DrawersStack = () => {
+  return(
+  <Stack.Navigator  screenOptions={{headerShown:false}} >
+  
+  <Stack.Screen name='Profile' component={Profile} ></Stack.Screen>
+   
+</Stack.Navigator>
+  )
+}
