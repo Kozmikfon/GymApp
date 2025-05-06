@@ -63,6 +63,7 @@ export const RootNavigator = () => {
     console.log(' trigger user Email',userEmail);
     if(!userEmail){
       setInitialRoute('AuthStack'); 
+      setLoading(false);
     }
     else
     {

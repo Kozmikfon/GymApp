@@ -1,78 +1,74 @@
-import React, { useEffect } from "react";
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from "react-native";
-import LinearGradient from "react-native-linear-gradient";
-import { getFilteredExercises, getUserSurveyResults } from "../Utils/firebase";
+import React, { useEffect } from 'react';
+import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 import auth from '@react-native-firebase/auth';
-import { FlatList } from "react-native-gesture-handler";
-import { Exercise } from "../interfaces/Props/Exercise";
-import { Item } from "react-native-paper/lib/typescript/components/Drawer/Drawer";
-import { Image } from "react-native";
-import { NavigationProp, useNavigation } from "@react-navigation/native";
-import { RootStackParamList } from "../interfaces/Naw/RootStackParamList";
-
-
+import {  getFilteredExercises, getUserSurveyResults } from '../Utils/firebase';
+import { FlatList } from 'react-native-gesture-handler';
+import { Exercise } from '../Interfaces/Props/Exercise';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { RootStackParamList } from '../Interfaces/Naw/RootStackParamList';
 
 export const Home = () => {
-  const [exercises,setExercises]=React.useState<Exercise[]>([]);
+  const [exercises,setExercises] = React.useState<Exercise[]>([]); 
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  useEffect(() => {
-    const userEmail=auth().currentUser?.email
+  useEffect(()=>{
+    const userEmail = auth().currentUser?.email;
     getFilteredExercises(userEmail || '').then((results) => {
-      console.log('trigger Results:', results);
       setExercises(results);
     })
-  }, [])
+  },[])
 
-  const workoutCategories = ["Strength", "Cardio", "Flexibility", "HIIT", "Yoga", "Pilates",];
+
+
 
   return (
-  <>
-    
-      {/* Üst Bölüm */}
-      <LinearGradient colors={["#2E7D32", "#4CAF50"]} style={styles.header}>
-        <Text style={styles.headerText}>Welcome Back!</Text>
-        <Text style={styles.dateText}>Thu Jan 16 2025</Text>
+    <>
+      {/* Welcome Section */}
+      <LinearGradient colors={['#4CAF50', '#2E7D32']} style={styles.header}>
+        <Text style={styles.welcomeText}>Welcome Back!</Text>
+        <Text style={styles.dateText}>{new Date().toDateString()}</Text>
       </LinearGradient>
 
-      {/* Günlük İlerleme */}
-      <View style={styles.progressSection}>
-        <View style={styles.progressBox}>
-          <Text style={styles.progressNumber}>3/5</Text>
-          <Text style={styles.progressLabel}>Workouts</Text>
-        </View>
-        <View style={styles.progressBox}>
-          <Text style={styles.progressNumber}>320</Text>
-          <Text style={styles.progressLabel}>Calories</Text>
-        </View>
-        <View style={styles.progressBox}>
-          <Text style={styles.progressNumber}>45</Text>
-          <Text style={styles.progressLabel}>Minutes</Text>
+      {/* Daily Progress */}
+      <View style={styles.progressContainer}>
+        <Text style={styles.sectionTitle}>Today's Progress</Text>
+        <View style={styles.statsRow}>
+          <View style={styles.statBox}>
+            <Text style={styles.statNumber}>3/5</Text>
+            <Text style={styles.statLabel}>Workouts</Text>
+          </View>
+          <View style={styles.statBox}>
+            <Text style={styles.statNumber}>320</Text>
+            <Text style={styles.statLabel}>Calories</Text>
+          </View>
+          <View style={styles.statBox}>
+            <Text style={styles.statNumber}>45</Text>
+            <Text style={styles.statLabel}>Minutes</Text>
+          </View>
         </View>
       </View>
 
-      {/* Antrenman Türleri */}
+      {/* Workout Categories */}
       <View style={styles.workoutsContainer}>
         <Text style={styles.sectionTitle}>Workouts</Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           {['Strength', 'Cardio', 'Flexibility', 'HIIT'].map((category) => (
-            <TouchableOpacity key={category} style={styles.categoryButton}  >
+            <TouchableOpacity key={category} style={styles.categoryButton} onPress={()=>navigation.navigate('SubscriptionPage')} >
               <Text style={styles.categoryText}>{category}</Text>
             </TouchableOpacity>
           ))}
         </ScrollView>
       </View>
-    
 
-      <FlatList
+          <FlatList
             data={exercises}
             keyExtractor={(item) => item.id}
             showsVerticalScrollIndicator={false}
             renderItem={({item}) => (
               <TouchableOpacity style={flatListStyles.exerciseCard} 
-                onPress={() => navigation.navigate('ExerciseDetail', { exercise: item })}
-              >
+                onPress={() => navigation.navigate('ExerciseDetail',{exercise:item})}
               
-              
+              > 
                 <LinearGradient colors={['#4CAF50', '#2E7D32']} style={flatListStyles.packageBadge} >
                   <Text style={flatListStyles.packageText}>{item.package}</Text>
                 </LinearGradient>
@@ -102,19 +98,64 @@ export const Home = () => {
           >
 
           </FlatList>
-  </>
+          </>
   );
 };
 
-// Stil Dosyası
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: '#f5f5f5',
   },
   header: {
     padding: 20,
     paddingTop: 40,
+  },
+  welcomeText: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: 'white',
+  },
+  dateText: {
+    fontSize: 16,
+    color: 'white',
+    opacity: 0.8,
+  },
+  progressContainer: {
+    padding: 20,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 15,
+  },
+  statsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  statBox: {
+    backgroundColor: 'white',
+    padding: 15,
+    borderRadius: 10,
+    width: '30%',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  statNumber: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#4CAF50',
+  },
+  statLabel: {
+    fontSize: 12,
+    color: '#666',
+  },
+  workoutsContainer: {
+    padding: 20,
   },
   categoryButton: {
     backgroundColor: '#4CAF50',
@@ -123,74 +164,32 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     marginRight: 10,
   },
-  headerText: {
-    fontSize: 22,
-    fontWeight: "bold",
-    color: "white",
-  },
   categoryText: {
     color: 'white',
     fontWeight: 'bold',
   },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 15,
-  },
-  dateText: {
-    fontSize: 14,
-    color: "white",
-  },
-  progressSection: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    marginTop: 10,
-  },
-  progressBox: {
-    backgroundColor: "white",
-    padding: 15,
-    borderRadius: 10,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-    elevation: 3,
-  },
-  progressNumber: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: "#2e7d32",
-  },
-  progressLabel: {
-    fontSize: 14,
-    color: "#666",
-  },
-  workoutSection: {
-    marginTop: 20,
-    padding: 10,
-  },
-  workoutTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-  scrollViewContent: {
-    flexDirection: "row",
-    paddingVertical: 10,
-  },
-  workoutsContainer: {
+  recentWorkouts: {
     padding: 20,
   },
-  workoutTag: {
-    backgroundColor: "#2e7d32",
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 20,
-    marginRight: 10,
+  workoutCard: {
+    backgroundColor: 'white',
+    padding: 15,
+    borderRadius: 10,
+    marginBottom: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
-  workoutTagText: {
-    color: "white",
-    fontWeight: "bold",
+  cardTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  cardSubtext: {
+    fontSize: 14,
+    color: '#666',
+    marginTop: 5,
   },
 });
 
@@ -276,5 +275,6 @@ const flatListStyles = StyleSheet.create({
     fontWeight: '500',
   },
 });
+
 
 export default Home;
