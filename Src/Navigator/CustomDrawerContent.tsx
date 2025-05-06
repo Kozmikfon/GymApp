@@ -61,7 +61,7 @@ export const CustomDrawerContent = (props:any) => {
   
             <TouchableOpacity 
               style={stylesCustomDrawer.menuItem}
-              onPress={() => navigation.navigate('Profile')}
+              onPress={() => navigation.navigate('DrawersStack')}
             >
               <MaterialCommunityIcons name="account" size={24} color="#fff" />
               <Text style={stylesCustomDrawer.menuText}>Profil</Text>
