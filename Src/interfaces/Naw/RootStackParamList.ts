@@ -6,6 +6,7 @@ export type RootStackParamList = {
     InitialQuestions: undefined;
     AdminDashboard:undefined;
     HomeDrawer:undefined;
+    ExerciseDetail:{exercise:undefined};
 }
 
 

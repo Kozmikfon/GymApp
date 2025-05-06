@@ -15,6 +15,7 @@ import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList } from '
 import { DrawerParamList } from '../interfaces/Naw/DrawerParamList';
 import { useAuth } from '../Context/AuthContext';
 import { CustomDrawerContent } from './CustomDrawerContent';
+import { ExerciseDetail } from '../Screens/Detail/ExerciseDetail';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const Drawer=createDrawerNavigator<DrawerParamList>();
@@ -32,6 +33,7 @@ const MainStack = () =>{
   return(
     <Stack.Navigator screenOptions={{headerShown:false}}>
       <Stack.Screen name='Home' component={Home}></Stack.Screen>
+      <Stack.Screen name='ExerciseDetail' component={ExerciseDetail}></Stack.Screen>
       <Stack.Screen name='InitialQuestions' component={ScreenIndex}></Stack.Screen>
     </Stack.Navigator>
   )

@@ -3,7 +3,7 @@ import { SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity
 import auth from '@react-native-firebase/auth';
 import { createUserInFirestore } from '../../Utils/firebase';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
-import { RootStackParamList } from '../../interfaces/Naw/RootStackParamList';
+import { RootStackParamList } from '../../Interfaces/Naw/RootStackParamList';
 import LinearGradient from 'react-native-linear-gradient';
 
 

@@ -7,12 +7,14 @@ import { FlatList } from "react-native-gesture-handler";
 import { Exercise } from "../interfaces/Props/Exercise";
 import { Item } from "react-native-paper/lib/typescript/components/Drawer/Drawer";
 import { Image } from "react-native";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { RootStackParamList } from "../interfaces/Naw/RootStackParamList";
 
 
 
 export const Home = () => {
   const [exercises,setExercises]=React.useState<Exercise[]>([]);
-
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   useEffect(() => {
     const userEmail=auth().currentUser?.email
     getFilteredExercises(userEmail || '').then((results) => {
@@ -53,7 +55,7 @@ export const Home = () => {
         <Text style={styles.sectionTitle}>Workouts</Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           {['Strength', 'Cardio', 'Flexibility', 'HIIT'].map((category) => (
-            <TouchableOpacity key={category} style={styles.categoryButton} >
+            <TouchableOpacity key={category} style={styles.categoryButton}  >
               <Text style={styles.categoryText}>{category}</Text>
             </TouchableOpacity>
           ))}
@@ -67,9 +69,10 @@ export const Home = () => {
             showsVerticalScrollIndicator={false}
             renderItem={({item}) => (
               <TouchableOpacity style={flatListStyles.exerciseCard} 
+                onPress={() => navigation.navigate('ExerciseDetail', { exercise: item })}
+              >
               
               
-              > 
                 <LinearGradient colors={['#4CAF50', '#2E7D32']} style={flatListStyles.packageBadge} >
                   <Text style={flatListStyles.packageText}>{item.package}</Text>
                 </LinearGradient>
