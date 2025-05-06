@@ -6,7 +6,7 @@ import { DrawerContentScrollView } from "@react-navigation/drawer";
 import { RootStackParamList } from "../interfaces/Naw/RootStackParamList";
 import React from "react";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-
+import auth from '@react-native-firebase/auth';
 export const CustomDrawerContent = (props:any) => {
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
     const { logout } = useAuth();
@@ -27,8 +27,8 @@ export const CustomDrawerContent = (props:any) => {
           {/* Profile Section */}
           <View style={stylesCustomDrawer.profileSection}>
             
-          <Text style={stylesCustomDrawer.profileName}>john doe</Text>
-          <Text style={stylesCustomDrawer.profileEmail}> hohn@gmail.com </Text>
+          <Text style={stylesCustomDrawer.profileName}>{auth().currentUser?.displayName}</Text>
+          <Text style={stylesCustomDrawer.profileEmail}>{auth().currentUser?.email} </Text>
           </View>
   
           {/* Menu Items */}
